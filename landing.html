@@ -1,0 +1,65 @@
+<html>
+<head>
+    <script src="js/phaser.js"></script>
+    <script src="js/convnet-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> 
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .starter-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+        canvas {
+            display : block;
+            margin : auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Rocket Lander</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="control.html">Stable Control</a></li>
+                    <li class="active"><a href="#">Direct Landing</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="starter-template">
+            <h1>Direct Landing Task</h1>
+            <h3>Use testFlag = true to toggle testing session</h3>
+            <div class="row">
+                <h4><div class="col-md-3">Score<div id="score">0/0</div></div></h3>
+                <h4><div class="col-md-3">Vx<div id="vx"></div></div></h3>
+                <h4><div class="col-md-3">Vy<div id="vy"></div></div></h3>
+                <h4><div class="col-md-3">Fuel<div id="fuel"></div></div></h3>
+            </div>
+            <div class="row">
+                <h4><div class="col-md-3">#<div id="episode"></div></div></h3>
+                <h4><div class="col-md-3">Reward<div id="reward"></div></div></h3>
+                <h4><div class="col-md-3">Action<div id="action"></div></div></h3>
+                <h4><div class="col-md-3">Time<div id="timer"></div></div></h3>
+            </div>
+            
+
+
+        </div>
+    </div>
+    <script src="js/landing.js"></script>
+</body>
+</html>
