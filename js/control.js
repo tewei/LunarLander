@@ -6,7 +6,7 @@
 var NeuralNetwork = function(){};
 var layer_defs = [];
 
-layer_defs.push({type: 'input', out_sx:1, out_sy:1, out_depth: 10});
+layer_defs.push({type: 'input', out_sx:1, out_sy:1, out_depth: 17});
 layer_defs.push({type: 'fc', num_neurons: 6, activation: 'sigmoid'});
 layer_defs.push({type: 'fc', num_neurons: 4, activation: 'sigmoid'});
 layer_defs.push({type: 'fc', num_neurons: 6, activation: 'sigmoid'});
@@ -28,7 +28,7 @@ var thisReward = 0;
 var episode = 0;
 var gamma = 0.8;
 var testFlag = false;
-var eps = 0.7;
+var eps = 0;
 var FPS = 3;
 var avgTime = 0;
 var result = [];
@@ -51,7 +51,7 @@ GameState.prototype.create = function() {
     this.game.stage.backgroundColor = 0x333333;
     this.PLAYED = 0;
     this.SCORE = 0;
-    this.FUEL = 150;
+    this.FUEL = 600;
     this.TIMER = 0;
     this.ROTATION_SPEED = 10; // degrees/second
     this.ACCELERATION = 100; // pixels/second/second
@@ -117,17 +117,20 @@ GameState.prototype.getReward = function(){
 };
 
 GameState.prototype.getState = function(){
-    var state = new convnetjs.Vol(1, 1, 10, 0.0);
+    var state = new convnetjs.Vol(1, 1, 17, 0.0);
     state.w[0] = this.ship.body.velocity.x;
     state.w[1] = this.ship.body.velocity.y;
     state.w[2] = this.ship.body.acceleration.x;
     state.w[3] = this.ship.body.acceleration.y;
     state.w[4] = this.ship.body.angularVelocity;
     state.w[5] = Math.sin(this.ship.rotation);
-    state.w[6] = this.ship.x;
-    state.w[7] = this.ship.y;
-    state.w[8] = this.game.width - this.ship.x;
-    state.w[9] = this.game.height - this.ship.y;
+    state.w[6] = Math.cos(this.ship.rotation);
+    state.w[7] = this.ship.x;
+    state.w[8] = this.ship.y;
+    state.w[9] = this.game.width - this.ship.x;
+    state.w[10] = this.game.height - this.ship.y;
+    state.w[11+lastAction] = 1;
+    console.log(state);
     return state;
 };
 
@@ -210,7 +213,7 @@ GameState.prototype.update = function() {
         thisAction = -1;
         var max = -1e9;
         approx = net.forward(thisState);
-        //console.log(approx.w);
+        console.log(approx.w);
         if(!testFlag && Math.random() > eps){
             thisAction = Math.floor(Math.random()*6);
             max = approx.w[thisAction];
@@ -231,6 +234,13 @@ GameState.prototype.update = function() {
     }
     
     if(endFlag && !testFlag){
+
+        for(var i = 0; i < trainSeq.length; ++i){
+            var j = Math.floor(Math.random()*trainSeq.length);
+            var temp = trainSeq[i];
+            trainSeq[i] = trainSeq[j];
+            trainSeq[j] = temp;
+        }
         while(trainSeq.length){
             var data = trainSeq.pop();
             var X = data[0];
